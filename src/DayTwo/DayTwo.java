@@ -23,6 +23,22 @@ public class DayTwo {
                 int[] lineAsInt = Arrays.stream(line.split(" ")).mapToInt(Integer::parseInt).toArray();
                 if (callDailyCode(lineAsInt))
                     counterValid++;
+                else {
+                    List<Integer> lineAsIntPart2 = new ArrayList<>();
+                    for (int i = 0; i < lineAsInt.length; i++) {
+                        lineAsIntPart2.add(lineAsInt[i]);
+                    }
+
+                    boolean isValid = false;
+                    for (int i = 0; !isValid && i < lineAsIntPart2.size(); i++) {
+                        int toRemove = lineAsIntPart2.remove(i);
+                        if (callDailyCodePart2(lineAsIntPart2)) {
+                            counterValid++;
+                            isValid = true;
+                        }
+                        lineAsIntPart2.add(i, toRemove);
+                    }
+                }
             }
         } catch (IOException | NullPointerException e) {
             System.err.println("Error reading the file: " + e.getMessage());
@@ -40,6 +56,20 @@ public class DayTwo {
             else if(!isIncreasing && (lineAsInt[i] - lineAsInt[i+1] < 1 || lineAsInt[i] - lineAsInt[i+1] > 3))
                 return false;
         }
+
+        return true;
+    }
+
+    public static boolean callDailyCodePart2(List<Integer> lineAsInt){
+        boolean isIncreasing = lineAsInt.get(0) < lineAsInt.get(1);
+
+        for(int i = 0; i < lineAsInt.size() - 1; i++){
+            if(isIncreasing && (lineAsInt.get(i) - lineAsInt.get(i + 1) < -3 || lineAsInt.get(i) - lineAsInt.get(i + 1) > -1))
+                return false;
+            else if(!isIncreasing && (lineAsInt.get(i) - lineAsInt.get(i + 1) < 1 || lineAsInt.get(i) - lineAsInt.get(i + 1) > 3))
+                return false;
+        }
+
         return true;
     }
 
